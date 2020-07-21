@@ -11,9 +11,11 @@ fun main() {
         (1..5000000).forEach {
             results.add(it, 0)
         }
+//        longestCollatzSequence(5000000)
         println("14: ${longestCollatzSequence(10) == 9} ${longestCollatzSequence(10)}")
         println("14: ${longestCollatzSequence(15) == 9} ${longestCollatzSequence(15)}")
         println("20: ${longestCollatzSequence(20) == 19} ${longestCollatzSequence(20)}")
+        println("54: ${longestCollatzSequence(54) == 54} ${longestCollatzSequence(54)}")
 //        println("5847: ${longestCollatzSequence(5847) == 3711} ${longestCollatzSequence(5847)}")
 //        println("46500: ${longestCollatzSequence(46500) == 35655} ${longestCollatzSequence(46500)}")
 //        println("54512: ${longestCollatzSequence(54512) == 52527} ${longestCollatzSequence(54512)}")
@@ -25,44 +27,45 @@ fun main() {
 }
 
 private var results = mutableListOf<Int>()
+private var maxFound = 1
 fun longestCollatzSequence(n: Int): Int {
-//    if (results.getOrNull(n-1) == 0) {
-//        println("Creating sequence for $n")
-        (1..n).forEach {
-            createSequence(it.toLong())
+    if (n > maxFound) {
+        (maxFound + 1..n).forEach {
+            createSequence(it)
         }
-//    }
+        maxFound = n
+    }
     var result = 0
     var max = 0
-    for (i in 0..n) {
+    for (i in 0..n-1) {
         if (results[i] >= max) {
             max = results[i]
             result = i + 1
         }
     }
-//    println(results.filterIndexed { idx, _ -> idx < n + 10 })
+//    println(results.filterIndexed { idx, _ -> idx < n })
 //    println("$result: $max")
     return result
 }
 
-fun createSequence(n: Long): Int {
+fun createSequence(n: Int): Int {
 //    print("$n -> ")
-    return if (results.getOrNull((n-1).toInt()) != null && results.get((n-1).toInt()) != 0) {
+    return if (results.getOrNull(n- 1) != null && results.get(n- 1) != 0) {
 //        println("   returning ${results.get((n-1).toInt())} for $n")
 //        println()
-        results.get((n-1).toInt())
+        results.get(n- 1)
     } else {
 //        println("   Solving for $n")
-        var result = 0L
-        result = if (n % 2 == 0L) 1L + createSequence(n shr 1)
-        else 1L + createSequence(3 * n + 1)
+        var result = 0
+        result = if (n % 2 == 0) 1 + createSequence(n shr 1)
+        else 1 + createSequence(3 * n + 1)
         if (n < 5000001) {
 //            println("  adding $n == $result")
-            results.set((n-1).toInt(), result.toInt())
+            results[n-1] = result
 //            println(results.filterIndexed { i, _ -> i < 20})
         }
 
-        result.toInt()
+        result
     }
 }
 

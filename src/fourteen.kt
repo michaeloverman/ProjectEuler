@@ -31,7 +31,7 @@ private var maxFound = 1
 fun longestCollatzSequence(n: Int): Int {
     if (n > maxFound) {
         (maxFound + 1..n).forEach {
-            createSequence(it)
+            createSequence(it.toULong())
         }
         maxFound = n
     }
@@ -48,24 +48,24 @@ fun longestCollatzSequence(n: Int): Int {
     return result
 }
 
-fun createSequence(n: Int): Int {
+fun createSequence(n: ULong): Int {
 //    print("$n -> ")
-    return if (results.getOrNull(n- 1) != null && results.get(n- 1) != 0) {
+    return if (results.getOrNull((n- 1u).toInt()) != null && results.get((n- 1u).toInt()) != 0) {
 //        println("   returning ${results.get((n-1).toInt())} for $n")
 //        println()
-        results.get(n- 1)
+        results.get((n- 1u).toInt())
     } else {
 //        println("   Solving for $n")
-        var result = 0
-        result = if (n % 2 == 0) 1 + createSequence(n shr 1)
-        else 1 + createSequence(3 * n + 1)
-        if (n < 5000001) {
+        var result = 0L
+        result = if (n % 2u == 0uL) 1L + createSequence(n shr 1)
+        else 1L + createSequence(3u * n + 1u)
+        if (n < 5000001u) {
 //            println("  adding $n == $result")
-            results[n-1] = result
+            results.set((n-1u).toInt(), result.toInt())
 //            println(results.filterIndexed { i, _ -> i < 20})
         }
 
-        result
+        result.toInt()
     }
 }
 
